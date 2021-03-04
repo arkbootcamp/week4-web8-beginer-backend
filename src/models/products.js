@@ -3,7 +3,7 @@ const connection = require('../configs/db')
 const product = {
   getProducts:()=>{
     return new Promise((resolve, reject)=>{
-      connection.query('SELECT * FROM products', (err, results) => {
+      connection.query('SELECT products.*, category.name AS nameCategory FROM products INNER JOIN category ON products.idCategory = category.id;', (err, results) => {
         if(!err){
           resolve(results)
         }else{
@@ -15,7 +15,7 @@ const product = {
   // SELECT * FROM `products` WHERE id=3
   getProductById:(id)=>{
     return new Promise((resolve, reject)=>{
-      connection.query('SELECT * FROM products WHERE id= ?',id , (err, results) => {
+      connection.query('SELECT products.*, category.name AS nameCategory FROM products INNER JOIN category ON products.idCategory = category.id WHERE products.id = ?',id , (err, results) => {
         if (!err) {
           resolve(results)
         } else {

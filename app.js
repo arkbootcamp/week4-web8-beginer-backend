@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 const port = 8000
+const morgan = require('morgan')
 const bodyParser = require('body-parser')
 const product = require('./src/routers/users')
 const routerUsers = require('./src/routers/users')
@@ -8,8 +10,16 @@ const productRouter = require('./src/routers/products')
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
 
+// const myModuleMid =(req, res, next)=>{
+//   console.log('module midle saya berjalan');
+//   // next()
+//   res.send('helo mid berhenti')
+// }
 // parse application/json
 app.use(bodyParser.json())
+app.use(cors())
+app.use(morgan('dev'))
+// app.use(myModuleMid)
 
 
 // router user
