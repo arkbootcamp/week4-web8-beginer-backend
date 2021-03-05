@@ -22,32 +22,13 @@ app.use(cors())
 app.use(morgan('dev'))
 // app.use(myModuleMid)
 
-
 // router user
 app.use('/users', routerUsers)
 app.use('/products', productRouter)
 
-
-
-app.listen(port, ()=>{
-  console.log('server is running port '+ port);
+app.listen(port, () => {
+  console.log('server is running port ' + port)
 })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // app.get('/product', (req, res)=>{
 //   // res.send('hello world')
@@ -73,8 +54,8 @@ app.listen(port, ()=>{
 //   const price = req.body.price * 2
 //   console.log(name);
 //   res.json({
-//     name, 
-//     description: description, 
+//     name,
+//     description: description,
 //     price: price
 //   })
 // })

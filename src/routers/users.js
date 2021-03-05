@@ -2,49 +2,12 @@ const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/users')
 
-
 router
   .post('/login', userController.login)
   .get('/', userController.getAllUser)
   .post('/register', userController.register)
 
 module.exports = router
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // const deleteProduct = ()=>{
 //   console.log('ini delte product');

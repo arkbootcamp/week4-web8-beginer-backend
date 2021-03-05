@@ -10,7 +10,7 @@ const getAllUser = (req, res) => {
   res.send('tampil semua user')
 }
 
-module.exports ={
+module.exports = {
   login,
   register,
   getAllUser
