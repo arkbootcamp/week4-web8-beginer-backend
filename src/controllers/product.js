@@ -1,15 +1,22 @@
 const productModels = require('../models/products')
 const helpers = require('../helpers/helper')
 const { v4: uuidv4 } = require('uuid')
+const createError = require('http-errors')
 
-exports.getProduct = (req, res) => {
+exports.getProduct = (req, res, next) => {
+  // const page = parseIn(req.query.page) || 1
+  // const limit = parseInt(req.query.limit) || 8
+  // const sort = req.query.sort
+  // const search = req.query.search
+  // const offsite = (page -1)*limit
   productModels.getProducts()
     .then((result) => {
       const resultProduct = result
       helpers.response(res, resultProduct, 200)
     })
     .catch((err) => {
-      console.log(err)
+      const error = new createError.InternalServerError()
+      next(error)
     })
 }
 

@@ -4,58 +4,44 @@ const app = express()
 const cors = require('cors')
 const port = process.env.PORT
 const morgan = require('morgan')
-const bodyParser = require('body-parser')
 const product = require('./src/routers/users')
 const routerUsers = require('./src/routers/users')
 const productRouter = require('./src/routers/products')
+// const bodyParser = require('body-parser')
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
+const route =require('./src/routers')
+const createError = require('http-errors')
 
-// const myModuleMid =(req, res, next)=>{
-//   console.log('module midle saya berjalan');
-//   // next()
-//   res.send('helo mid berhenti')
-// }
-// parse application/json
-app.use(bodyParser.json())
+app.use(express.json())
 app.use(cors())
 app.use(morgan('dev'))
 // app.use(myModuleMid)
 
 // router user
-app.use('/users', routerUsers)
-app.use('/products', productRouter)
+// app.use('/users', routerUsers)
+// app.use('/products', productRouter)
+app.use('/v1', route)
+
+app.use('*', (req, res, next)=>{
+  const error = new createError.NotFound()
+  next(error)
+})
+
+// error handling
+app.use((err, req, res, next)=>{
+  if(!err.status){
+    err.status = 500
+  }
+  res.json({
+    message: err.message,
+    status_error: err.status
+  })
+})
 
 app.listen(port, () => {
   console.log('server is running port ' + port)
 })
 
-// app.get('/product', (req, res)=>{
-//   // res.send('hello world')
-//   const name = req.query.name
-//   const email = req.query.email
-//   res.json({
-//     name: name,
-//     emai: email
-//   })
-// })
 
-// app.get('/user/:idUserbaru', (req, res)=>{
-//   const idUser = req.params.idUserbaru
-//   const cobaHeader = req.headers.cobaheader
-//   res.send(cobaHeader)
-// })
-
-// app.post('/products', (req, res)=>{
-//   // res.send('hello ini product method post')
-//   console.log(req.body);
-//   const name = req.body.name + " new"
-//   const description = req.body.description + " new"
-//   const price = req.body.price * 2
-//   console.log(name);
-//   res.json({
-//     name,
-//     description: description,
-//     price: price
-//   })
-// })
+// 'http://localhost:8000/v1/movie/'
