@@ -3,7 +3,7 @@ const response = (res, result, status, err) => {
   }
   resultPrint.status = 'success'
   resultPrint.statusCode = status
-  resultPrint.result = result
+  resultPrint.data = result
   resultPrint.error = err || null
   res.status(status).json(resultPrint)
 }

@@ -23,11 +23,12 @@ app.use(morgan('dev'))
 // app.use('/products', productRouter)
 app.use('/v1', route)
 
+app.use('/img', express.static('./uploads'))
+
 app.use('*', (req, res, next)=>{
   const error = new createError.NotFound()
   next(error)
 })
-
 // error handling
 app.use((err, req, res, next)=>{
   if(!err.status){

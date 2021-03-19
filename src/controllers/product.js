@@ -4,11 +4,6 @@ const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
 
 exports.getProduct = (req, res, next) => {
-  // const page = parseIn(req.query.page) || 1
-  // const limit = parseInt(req.query.limit) || 8
-  // const sort = req.query.sort
-  // const search = req.query.search
-  // const offsite = (page -1)*limit
   productModels.getProducts()
     .then((result) => {
       const resultProduct = result
@@ -44,6 +39,7 @@ exports.insertProduct = (req, res) => {
   // const name = req.body.name
   // const description = req.body.description
   // const price = req.body.price
+  console.log(req.file);
   const { name, description, price, idCategory } = req.body
   console.log(uuidv4())
   const data = {
@@ -51,6 +47,7 @@ exports.insertProduct = (req, res) => {
     name,
     description,
     price,
+    image: `http://localhost:4500/img/${req.file.filename}`,
     idCategory,
     createdAt: new Date(),
     updatedAt: new Date()
