@@ -6,6 +6,7 @@ router
   .post('/login', userController.login)
   .get('/', userController.getAllUser)
   .post('/register', userController.register)
+  .post('/email', userController.sendEmail)
 
 module.exports = router
 

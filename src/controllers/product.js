@@ -2,12 +2,17 @@ const productModels = require('../models/products')
 const helpers = require('../helpers/helper')
 const { v4: uuidv4 } = require('uuid')
 const createError = require('http-errors')
+const redis = require('redis')
+const client = redis.createClient(6379)
 
 exports.getProduct = (req, res, next) => {
   productModels.getProducts()
     .then((result) => {
       const resultProduct = result
-      helpers.response(res, resultProduct, 200)
+      client.setex("getAllProduct", 60 * 60 * 12, JSON.stringify(resultProduct))
+      // setTimeout(()=>{
+        return helpers.response(res, resultProduct, 200)
+      // }, 2000)
     })
     .catch((err) => {
       const error = new createError.InternalServerError()
@@ -18,7 +23,6 @@ exports.getProduct = (req, res, next) => {
 exports.updateProduct = (req, res) => {
   const idProduct = req.params.id
   const { name, description, price } = req.body
-
   const data = {
     name,
     description,
@@ -76,6 +80,8 @@ exports.getProductById = (req, res) => {
   const idProduct = req.params.id
   productModels.getProductById(idProduct)
     .then((result) => {
-      helpers.response(res, result, 200)
+      const dataResult = result
+      client.setex(`product_${idProduct}`,  60 * 60 * 12, JSON.stringify(resultProduct))
+      helpers.response(res, dataResult, 200)
     })
 }

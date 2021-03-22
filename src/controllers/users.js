@@ -4,6 +4,7 @@ const helpers = require('../helpers/helper')
 const common = require('../helpers/common')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const helperEamil = require('../helpers/email')
 
 const login = async (req, res) => {
   try {
@@ -55,7 +56,13 @@ const register = async (req, res) => {
   }
   
 }
-
+const sendEmail = async(req, res)=>{
+  const resEmail = await helperEamil.sendEmail('muhammadrisano@gmail.com', 'ini pembayaran tiket bla bla')
+  console.log(resEmail);
+  res.json({
+    status: 'success'
+  })
+}
 const getAllUser = (req, res) => {
   res.send('tampil semua user')
 }
@@ -63,5 +70,6 @@ const getAllUser = (req, res) => {
 module.exports = {
   login,
   register,
-  getAllUser
+  getAllUser,
+  sendEmail
 }
