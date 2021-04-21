@@ -5,6 +5,7 @@ const common = require('../helpers/common')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const helperEamil = require('../helpers/email')
+const cookie = require('cookie')
 
 const login = async (req, res) => {
   try {
@@ -25,6 +26,15 @@ const login = async (req, res) => {
     const payload = { email: user.email, fullname: user.fullname }
     jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: '1h' }, function (err, token) {
       user.token = token
+
+      // set cookie
+      res.setHeader('Set-Cookie', cookie.serialize('token', token, {
+        httpOnly: true,
+        maxAge: 60 * 60,
+        secure: false,
+        path: '/',
+        sameSite: 'strict'
+      }));
       return helpers.response(res, user, 200, null)
     });
     

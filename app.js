@@ -7,6 +7,7 @@ const morgan = require('morgan')
 const product = require('./src/routers/users')
 const routerUsers = require('./src/routers/users')
 const productRouter = require('./src/routers/products')
+var cookieParser = require('cookie-parser')
 // const bodyParser = require('body-parser')
 // parse application/x-www-form-urlencoded
 app.use(express.urlencoded({ extended: false }))
@@ -14,8 +15,13 @@ const route =require('./src/routers')
 const createError = require('http-errors')
 
 app.use(express.json())
-app.use(cors())
+const optionCors = {
+  origin: 'http://localhost:3000',
+  credentials: true
+}
+app.use(cors(optionCors))
 app.use(morgan('dev'))
+app.use(cookieParser())
 // app.use(myModuleMid)
 
 // router user
