@@ -7,6 +7,7 @@ router
   .get('/', userController.getAllUser)
   .post('/register', userController.register)
   .post('/email', userController.sendEmail)
+  .post('/refresh-token', userController.refreshToken)
 
 module.exports = router
 

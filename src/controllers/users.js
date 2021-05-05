@@ -3,9 +3,9 @@ const userModel = require('../models/users')
 const helpers = require('../helpers/helper')
 const common = require('../helpers/common')
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
 const helperEamil = require('../helpers/email')
-const cookie = require('cookie')
+// const cookie = require('cookie')
+const helperAuth = require('../helpers/auth')
 
 const login = async (req, res) => {
   try {
@@ -23,20 +23,18 @@ const login = async (req, res) => {
     
     // lulus pengecekan
     // generet token
-    const payload = { email: user.email, fullname: user.fullname }
-    jwt.sign(payload, process.env.SECRET_KEY, {expiresIn: '1h' }, function (err, token) {
-      user.token = token
-
-      // set cookie
-      res.setHeader('Set-Cookie', cookie.serialize('token', token, {
-        httpOnly: true,
-        maxAge: 60 * 60,
-        secure: false,
-        path: '/',
-        sameSite: 'strict'
-      }));
-      return helpers.response(res, user, 200, null)
-    });
+    const payload = { 
+      email: user.email,
+      fullname: user.fullname, 
+      role: 2 // ambil dari db
+    }
+    const token = await helperAuth.generateToken(payload)
+    const refreshToken = await helperAuth.generateRefreshToken(payload)
+    
+    console.log(refreshToken);
+    user.token = token
+    user.refreshToken = refreshToken
+    return helpers.response(res, user, 200, null)
     
   } catch (error) {
     console.log(error);
@@ -66,6 +64,8 @@ const register = async (req, res) => {
   }
   
 }
+
+
 const sendEmail = async(req, res)=>{
   const resEmail = await helperEamil.sendEmail('muhammadrisano@gmail.com', 'ini pembayaran tiket bla bla')
   console.log(resEmail);
@@ -73,13 +73,36 @@ const sendEmail = async(req, res)=>{
     status: 'success'
   })
 }
+
 const getAllUser = (req, res) => {
   res.send('tampil semua user')
+}
+
+const refreshToken = async (req, res)=>{
+  const tokenRefresh = req.body.refreshToken
+  try {
+    const decodedRefresh = await helperAuth.verifyRefreshToken(tokenRefresh)
+    const tokenData = {
+      email: decodedRefresh.email,
+      fullname : decodedRefresh.fullname,
+      role : decodedRefresh.role
+    }
+    const token = await helperAuth.generateToken(tokenData)
+    const refreshToken = await helperAuth.generateRefreshToken(tokenData)
+    const data = {
+      token,
+      refreshToken
+    }
+    return helpers.response(res, data, 200, null)
+  } catch (error) {
+    return helpers.response(res, { message: error.message }, 401, null)
+  }
 }
 
 module.exports = {
   login,
   register,
   getAllUser,
-  sendEmail
+  sendEmail,
+  refreshToken
 }

@@ -4,8 +4,11 @@ const helpers = require('../helpers/helper')
 const verifyAccess =(req, res, next)=>{
   console.log(req.cookies.token);
   
-  // const authorization = req.headers.authorization
-  const authorization = req.cookies.token
+  
+  const authorization = req.headers.authorization
+  const token = authorization.split(" ")[1]
+  // const authorization = req.cookies.token
+
   if (!authorization){
     return helpers.response(res, null, 401, {
       message: 'Server, Need Token!'
@@ -14,7 +17,7 @@ const verifyAccess =(req, res, next)=>{
 
   // let token = authorization.split(" ")
   // token = token[1]
-  const token = authorization
+  // const token = authorization
 
   jwt.verify(token, process.env.SECRET_KEY, function (err, decoded) {
     if(err){
